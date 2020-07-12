@@ -49,8 +49,6 @@
     "react-app-polyfill": "^1.0.5",
     "react-dev-utils": "^10.0.0",
     "react-dom": "^16.12.0",
-    "react-router": "^5.2.0",
-    "react-router-dom": "^5.2.0",
     "resolve": "1.12.2",
     "resolve-url-loader": "3.1.1",
     "sass-loader": "8.0.0",
@@ -64,9 +62,9 @@
     "workbox-webpack-plugin": "4.3.1"
   },
   "scripts": {
-    "start": "node scripts/start.js --no-cache",
+    "start": "node scripts/start.js",
     "build": "node scripts/build.js",
-    "test": "node scripts/test.js --no-cache"
+    "test": "node scripts/test.js"
   },
   "eslintConfig": {
     "extends": "react-app"
