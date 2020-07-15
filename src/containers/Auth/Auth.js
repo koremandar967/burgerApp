@@ -80,6 +80,7 @@ class Auth extends Component {
         };
 
         this.setState({ controls: updatedControls });
+
     }
 
     signUpHandler = (event) => {
