@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
+import {connect} from 'react-redux';
 import Input from '../../components/UI/Input/Input';
 import Button from '../../components/UI/Button/button';
 import classes from './Auth.module.css';
 import axios from 'axios';
+import * as actions from '../../store/actions/index';
 
 class Auth extends Component {
 
@@ -86,22 +88,22 @@ class Auth extends Component {
     signUpHandler = (event) => {
 
         event.preventDefault();
+        this.props.onAuth(this.state.controls.email.value, this.state.controls.password.value);
+        // const authData = {
+        //     email: this.state.controls['email'].value,
+        //     password: this.state.controls['password'].value,
+        //     returnSecureToken: true
+        // }
+        // let url = "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBLU6lISn1XBKHC5fCxPakUEV_XpeVZi2k";
+        // if(!this.state.isSignUp) {
+        //     url = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBLU6lISn1XBKHC5fCxPakUEV_XpeVZi2k";
+        // }
 
-        const authData = {
-            email: this.state.controls['email'].value,
-            password: this.state.controls['password'].value,
-            returnSecureToken: true
-        }
-        let url = "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBLU6lISn1XBKHC5fCxPakUEV_XpeVZi2k";
-        if(!this.state.isSignUp) {
-            url = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBLU6lISn1XBKHC5fCxPakUEV_XpeVZi2k";
-        }
-
-        axios.post(url, authData)
-            .then(response => 
-                {console.log(response)})
-            .catch(err => {
-                console.log(err)});
+        // axios.post(url, authData)
+        //     .then(response => 
+        //         {console.log(response)})
+        //     .catch(err => {
+        //         console.log(err)});
 
     }
 
@@ -155,4 +157,10 @@ class Auth extends Component {
     }
 }
 
-export default Auth;
+const mapDispatchToProps = dispatch => {
+    return {
+        onAuth : (email, pwd) => dispatch(actions.auth(email, pwd)),
+    }
+}
+
+export default connect(null,mapDispatchToProps)( Auth);
