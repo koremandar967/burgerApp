@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
+import {Redirect} from 'react-router-dom';
 import Input from '../../components/UI/Input/Input';
 import Button from '../../components/UI/Button/button';
 import classes from './Auth.module.css';
@@ -41,6 +42,12 @@ class Auth extends Component {
             }
         },
         isSignUp : true,
+    }
+
+    componentDidMount() {
+        if(!this.props.buildingBurger && this.props.authRedirectPath !== '/') {
+            this.props.onSetRedirectPath('/');
+        }
     }
 
     checkValidity = (value, rules) => {    // look arrow function is not used
@@ -88,22 +95,7 @@ class Auth extends Component {
     signUpHandler = (event) => {
 
         event.preventDefault();
-        this.props.onAuth(this.state.controls.email.value, this.state.controls.password.value);
-        // const authData = {
-        //     email: this.state.controls['email'].value,
-        //     password: this.state.controls['password'].value,
-        //     returnSecureToken: true
-        // }
-        // let url = "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBLU6lISn1XBKHC5fCxPakUEV_XpeVZi2k";
-        // if(!this.state.isSignUp) {
-        //     url = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBLU6lISn1XBKHC5fCxPakUEV_XpeVZi2k";
-        // }
-
-        // axios.post(url, authData)
-        //     .then(response => 
-        //         {console.log(response)})
-        //     .catch(err => {
-        //         console.log(err)});
+        this.props.onAuth(this.state.controls.email.value, this.state.controls.password.value,this.state.isSignUp);
 
     }
 
@@ -142,8 +134,22 @@ class Auth extends Component {
             );
         });
 
+        let errorMessage = null;
+        if(this.props.error) {
+            errorMessage = ( 
+                <p>{this.props.error.message} </p>
+            );
+        } 
+
+        let authRedirect = null;
+        if(this.props.isAuthenticated) {
+            authRedirect = <Redirect to = {this.props.authRedirectPath} />
+        }
+
         return (
             <div className={classes.Auth}>
+                {authRedirect}
+                {errorMessage}
                 <form onSubmit={this.signUpHandler}>
                     {form}
                     <Button btnType="Success" >SUBMIT</Button>
@@ -157,10 +163,21 @@ class Auth extends Component {
     }
 }
 
-const mapDispatchToProps = dispatch => {
+const mapStateToProps = state => {
     return {
-        onAuth : (email, pwd) => dispatch(actions.auth(email, pwd)),
+        loading : state.auth.loading,
+        error : state.auth.error,
+        isAuthenticated : state.auth.token !== null,
+        buildingBurger : state.burgerBuilder.building,
+        authRedirectPath : state.auth.authRedirectPath
     }
 }
 
-export default connect(null,mapDispatchToProps)( Auth);
+const mapDispatchToProps = dispatch => {
+    return {
+        onAuth : (email, pwd,isSignup) => dispatch(actions.auth(email, pwd,isSignup)),
+        onSetRedirectPath : (path) => dispatch(actions.setAuthRedirectPath(path))
+    }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)( Auth);
