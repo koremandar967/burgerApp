@@ -1,6 +1,6 @@
 # Burger Builder App
 
-It is just practice and tutorial based project. App live at https://burger-builder-app-e77e1.firebaseapp.com/
+It is just practice and tutorial based project. App live at https://burger-builder-app-e77e1.web.app/
 
 ### Todos
 
